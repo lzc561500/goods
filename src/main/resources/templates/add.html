@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="js/jquery-1.8.3.js" type="text/javascript"></script>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style type="text/css">
+        table input[type="text"]{
+            border: none;
+            line-height:22px;
+        }
+        table select{
+            width:160px;
+            height:42px;
+            border: none;
+        }
+        table{
+            margin-top: 100px;
+        }
+    </style>
+    <script type="text/javascript">
+        $(function () {
+       /*     $.getJSON("goods",function (result) {
+                var str=""
+                $.each(result,function (i,item) {
+                    str+="<option value="+item.id+">"+item.name+"</option>"
+                })
+                $("[name='goods.id']").append(str);
+            });*/
+
+            $("#btnOk").click(function () {
+                var memberNumber=$("[name='memberNumber']").val();
+                var nickName=$("[name='nickName']").val();
+                var goodsId=$("[name='goods.id']").val();
+                if(memberNumber==""){
+                    alert("会员卡号不能为空！")
+                    location="add";
+                }else if(nickName==""){
+                    alert("昵称不能为空！")
+                    location="add";
+                }else if(goodsId==-1){
+                    alert("请选择商品！")
+                    location="add";
+                }else{
+                    var params=$("form").serialize();
+                    $.post("add",params,function (result) {
+                        if (result=="true"){
+                            alert("添加成功!");
+                            location="index";
+                        } else{
+                            alert("添加失败!");
+                        }
+                    })
+                }
+
+            })
+        })
+    </script>
+</head>
+<body>
+<form>
+    <table align="center" border="1" cellpadding="0" cellspacing="0">
+        <tr>
+            <td colspan="5" style="text-align: center"><h2>添加会员</h2></td>
+        </tr>
+
+        <tr>
+            <td>添加会员卡号：</td>
+            <td><input type="text" name="memberNumber"/> </td>
+        </tr>
+        <tr>
+            <td>昵称：</td>
+            <td>
+                <input type="text" name="nickName"/>
+            </td>
+        </tr>
+        <tr style="line-height:40px">
+            <td>请选择商品：<font style="color: red">(*)</font></td>
+            <td>
+                <select name="goods.id">
+                    <option value="-1">请选择商品</option>
+                    <option th:each="g,userStart:${list}" th:value="${g.id}" th:text="${g.name}"></option>
+                </select>
+            </td>
+        </tr>
+        <tr style="line-height: 40px">
+            <td colspan="5" style="text-align: center">
+                <input type="button" value="提交" id="btnOk" style="background-color: red;color:white"/>&nbsp;&nbsp;
+                <input type="button" value="返回" style="background-color: red;color: white"/>
+            </td>
+
+        </tr>
+    </table>
+</form>
+</body>
+</html>

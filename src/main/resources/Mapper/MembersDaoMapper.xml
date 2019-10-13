@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.bdqn.goods.dao.MembersDao">
+	<resultMap id="membersMap" type="Members">
+		<id property="id" column="id"/>
+		<result property="memberNumber" column="memberNumber"/>
+		<result property="nickName" column="nickName"/>
+		<result property="createTime" column="createTime"/>
+		<association property="goods" javaType="Goods">
+			<id property="id" column="goodsId"/>
+			<result property="name" column="name"/>
+		</association>
+	</resultMap>
+
+	<select id="getList" resultMap="membersMap">
+		select * from members m inner join goods g on m.goodsId=g.id
+		<where>
+			<if test="memberNumber!=null and memberNumber!=''">
+				and memberNumber like concat('%',#{memberNumber},'%')
+			</if>
+		</where>
+		order by createTime desc
+	</select>
+	<insert id="add" parameterType="Members">
+		insert into members values (null,#{memberNumber},#{nickName},now(),#{goods.id})
+	</insert>
+	<delete id="del" parameterType="String">
+		delete from members where memberNumber=#{memberNumber}
+	</delete>
+</mapper>
